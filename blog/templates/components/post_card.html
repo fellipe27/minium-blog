@@ -1,0 +1,26 @@
+{% load static %}
+{% load base64_filters %}
+<a href="{% url 'blog:view_post' username=post.author.username post_id=post.id %}" class="w-full flex items-center justify-between rounded p-2 border-b border-zinc-300 hover:border-none hover:bg-zinc-500/10">
+    <div class="w-[70%] flex flex-col gap-4">
+        <h2 class="w-full truncate font-semibold">{{ post.title }}</h2>
+        <p class="w-full truncate text-sm">{{ post.story }}</p>
+        <div class="flex text-xs items-center gap-5">
+            <span class="w-40">{{ post.created_at|timesince }} ago</span>
+            <div class="flex items-center gap-2">
+                <img src="{% static 'images/full_heart_icon.png' %}" alt="Void heart" class="w-4">
+                <span>{{ post.likes.count }}</span>
+            </div>
+            <div class="flex items-center gap-2">
+                <img src="{% static 'images/comments_icon.png' %}" alt="Void heart" class="w-4">
+                <span>{{ post.comments.count }}</span>
+            </div>
+        </div>
+    </div>
+    <div class="w-[200px] h-[100px]">
+        {% if post.picture %}
+            <div style="background-image: url('data:image/jpeg;base64,{{ post.picture|base64encode }}')" class="w-full h-full rounded-[2px] bg-center bg-cover"></div>
+        {% else %}
+            <img src="{% static 'images/post_default_image.png' %}" alt="Post default picture" class="w-full h-full rounded-[2px]">
+        {% endif %}
+    </div>
+</a>

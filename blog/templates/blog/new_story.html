@@ -1,0 +1,60 @@
+{% load static %}
+{% load base64_filters %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>
+        {% if new_post %}
+            New story - Minium
+        {% else %}
+            {{ post.title }} - {{ post.author.username }} - Minium
+        {% endif %}
+    </title>
+    <link rel="icon" href="{% static 'images/favicon.ico' %}">
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+    <main class="w-screen h-screen flex flex-col">
+        <header class="w-full h-20 flex items-center justify-between px-28 gap-6">
+            <a href="{% url 'blog:home' %}">
+                <h1 class="font-bold font-serif text-3xl">Minium</h1>
+            </a>
+            <div class="flex items-center gap-8">
+                <button id="publish_btn" class="w-32 h-8 text-sm rounded-3xl cursor-pointer text-white bg-green-500 disabled:cursor-default disabled:opacity-50">
+                    {% if new_post %}
+                        Publish
+                    {% else %}
+                        Update
+                    {% endif %}
+                </button>
+                <a href="{% url 'blog:profile' username=request.user.username %}" class="w-11 h-11 rounded-full flex items-center justify-center border border-black/70">
+                    {% if request.user.picture %}
+                        <div style="background-image: url('data:image/jpeg;base64,{{ request.user.picture|base64encode }}')" class="w-full h-full rounded-full bg-center bg-cover"></div>
+                    {% else %}
+                        <img src="{% static 'images/user_default_icon.png' %}" alt="User default image" class="w-full h-full">
+                    {% endif %}
+                </a>
+            </div>
+        </header>
+        <div class="w-[70%] h-full mx-auto">
+            <form method="post" enctype="multipart/form-data" action="{% if new_post %}{% url 'blog:new_story' %}{% else %}{% url 'blog:update_post' username=post.author.username post_id=post.id %}{% endif %}" class="w-full h-full flex flex-col gap-4 font-serif">
+                {% csrf_token %}
+                <label for="image" class="w-11 h-11 rounded-full flex items-center justify-center absolute border -translate-x-20 translate-y-9 cursor-pointer border-black/50">
+                    <label id="selected_image" data-original="{{ post.picture|base64encode }}" class="w-full h-full rounded-full bg-center bg-cover {% if not post.picture %}hidden{% endif %}"></label>
+                    <img src="{% static 'images/image_icon.png' %}" id="preview" alt="Select file image" class="w-6 % if post.picture %}hidden{% endif %}">
+                </label>
+                <input type="file" id="image" name="image" accept="image/*" class="hidden">
+                <label>
+                    <input required spellcheck="false" type="text" name="title" placeholder="Title" data-original="{{ post.title }}" value="{{ post.title }}" class="w-full border-none outline-none text-5xl placeholder:text-black/50">
+                </label>
+                <label class="w-full h-full">
+                    <textarea required spellcheck="false" name="story" placeholder="Tell your story..." data-original="{{ post.story }}" class="w-full h-[95%] text-2xl border-none outline-none resize-none placeholder:text-black/50">{{ post.story }}</textarea>
+                </label>
+                <button type="submit" class="hidden"></button>
+            </form>
+        </div>
+    </main>
+
+    <script src="{% static 'js/new_story.js' %}"></script>
+</body>
+</html>

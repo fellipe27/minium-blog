@@ -1,0 +1,40 @@
+{% load static %}
+{% load base64_filters %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Settings - Minium</title>
+    <link rel="icon" href="{% static 'images/favicon.ico' %}">
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+    <main class="w-screen h-screen flex flex-col">
+        {% include 'components/base_header.html' %}
+        <div class="w-full h-full flex flex-col items-center mt-10 gap-5">
+            <h1 class="font-semibold text-3xl">Profile information</h1>
+            <form method="post" enctype="multipart/form-data" action="{% url 'blog:update_profile' username=user.username %}" class="w-full flex flex-col items-center justify-center gap-2">
+                {% csrf_token %}
+                <label for="image" class="w-32 h-32 rounded-full flex items-center justify-center relative border cursor-pointer border-black/50">
+                    {% if user.picture %}
+                        <label style="background-image: url('data:image/jpeg;base64,{{ user.picture|base64encode }}')" id="user_image" class="w-full h-full rounded-full bg-center bg-cover"></label>
+                    {% else %}
+                        <img src="{% static 'images/user_default_icon.png' %}" id="user_default_image" alt="User default icon" class="w-full h-full rounded-full">
+                    {% endif %}
+                </label>
+                <div class="w-6 h-6 absolute translate-x-12 rounded-full flex items-center justify-center cursor-pointer border border-black/70 bg-white">
+                    <img src="{% static 'images/pencil_icon.png' %}" alt="Pencil icon" class="w-4">
+                </div>
+                <input type="file" id="image" name="image" accept="image/*" class="hidden">
+                <label for="bio" class="mt-4 text-sm font-semibold">Short bio</label>
+                <input id="bio" name="bio" maxlength="50" placeholder="..." data-original="{{ user.bio }}" value="{{ user.bio }}" class="w-80 h-8 px-2 py-1 border rounded border-black/70 placeholder:text-zinc-500 focus:outline-none">
+                <div class="flex items-center justify-center gap-4 absolute bottom-6">
+                    <a href="{% url 'blog:profile' username=user.username %}" class="w-32 h-7 border flex items-center justify-center rounded-3xl border-black/70">Cancel</a>
+                    <button type="submit" class="w-32 h-7 rounded-3xl text-white bg-green-500 disabled:cursor-default disabled:opacity-50">Save changes</button>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <script src="{% static 'js/update_profile.js' %}"></script>
+</body>
+</html>

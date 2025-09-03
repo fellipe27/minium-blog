@@ -1,0 +1,29 @@
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Minium: Read and write stories</title>
+    <link rel="icon" href="{% static 'images/favicon.ico' %}">
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+    <main class="w-screen h-screen flex flex-col">
+        <header class="w-full h-20 flex items-center justify-between px-10 border-b border-black/50">
+            <h1 class="font-serif font-bold text-3xl">Minium</h1>
+            <nav class="flex items-center justify-center gap-5 text-sm">
+                <a href="{% url 'accounts:register' %}" class="hover:underline">Get started</a>
+                <a href="{% url 'accounts:login' %}" class="w-32 py-1 flex items-center justify-center rounded-3xl bg-black text-white hover:opacity-85">Sign in</a>
+            </nav>
+        </header>
+        <div class="w-full h-full flex items-center pl-10">
+            <div class="w-full h-full flex flex-col justify-center gap-8 text-8xl">
+                <h1 class="font-serif">Human <br> stories & ideas</h1>
+                <p class="text-lg">A place to read, write and deepen your understanding</p>
+                <a href="{% url 'accounts:login' %}" class="w-40 py-2 flex items-center justify-center rounded-3xl text-sm bg-black text-white hover:opacity-85">Start reading</a>
+            </div>
+            <img src="{% static 'images/landing_image.WEBP' %}" loading="eager" alt="Minium landing image" class="w-1/4">
+        </div>
+        <footer class="w-full h-6 border-t border-black/50"></footer>
+    </main>
+</body>
+</html>

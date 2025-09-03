@@ -1,0 +1,26 @@
+{% load static %}
+{% load base64_filters %}
+<header class="w-full h-16 flex items-center px-8 gap-6 border-b border-black/50">
+    <a href="{% url 'blog:home' %}">
+        <h1 class="font-bold font-serif text-3xl">Minium</h1>
+    </a>
+    <form method="get" action="{% url 'blog:search' category='posts' %}" class="w-full flex items-center gap-2 translate-y-2">
+        <label for="search">
+            <img src="{% static 'images/search_icon.png' %}" alt="Search icon" class="w-5">
+        </label>
+        <input type="text" name="q" id="search" placeholder="Search" class="w-1/2 h-8 px-2 rounded border-none outline-none placeholder:text-black/50">
+    </form>
+    <div class="flex items-center justify-between gap-6">
+        <a href="{% url 'blog:new_story' %}" class="w-20 flex items-center gap-3 group">
+            <img src="{% static 'images/write_icon.png' %}" alt="Write story icon" class="w-5">
+            <span class="group-hover:text-black/50">Write</span>
+        </a>
+        <a href="{% url 'blog:profile' username=request.user.username %}" class="w-11 h-11 flex items-center justify-center rounded-full border border-black/70">
+            {% if request.user.picture %}
+                <div style="background-image: url('data:image/jpeg;base64,{{ request.user.picture|base64encode }}')" class="w-full h-full rounded-full bg-center bg-cover"></div>
+            {% else %}
+                <img src="{% static 'images/user_default_icon.png' %}" alt="User default image" class="w-full h-full">
+            {% endif %}
+        </a>
+    </div>
+</header>

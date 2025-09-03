@@ -1,0 +1,34 @@
+{% load static %}
+{% load base64_filters %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Minium</title>
+    <link rel="icon" href="{% static 'images/favicon.ico' %}">
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+    <main class="w-screen h-screen flex flex-col">
+        {% include 'components/base_header.html' %}
+        <nav class="px-8 mt-8 flex gap-5">
+            <a href="/home" class="{% if not feed %}underline font-semibold{% endif %}">For you</a>
+            <a href="/home/?feed=following" class="{% if feed %}underline font-semibold{% endif %}">Following</a>
+        </nav>
+        <div class="w-[70%] flex flex-col px-8 py-3 gap-2 overflow-y-auto">
+            {% if results %}
+                {% for post in results %}
+                    {% include 'components/post_card.html' with post=post %}
+                {% endfor %}
+            {% else %}
+                <span class="mt-4">
+                    {% if not feed %}
+                        No suggestions at the moment, please continue browsing for now.
+                    {% else %}
+                        No posts from users you follow for now.
+                    {% endif %}
+                </span>
+            {% endif %}
+        </div>
+    </main>
+</body>
+</html>

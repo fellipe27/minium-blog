@@ -1,0 +1,57 @@
+{% load static %}
+{% load base64_filters %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Minium</title>
+    <link rel="icon" href="{% static 'images/favicon.ico' %}">
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+    <main class="w-screen h-screen flex flex-col overflow-hidden">
+        {% include 'components/base_header.html' %}
+        <h1 class="font-semibold p-8 text-3xl text-zinc-500">Results for <span class="text-black">{{ q|default:'""' }}</span></h1>
+        <nav class="px-8 flex gap-5">
+            <a href="/search/posts/?q={{ q }}" class="{% if category == 'posts' %}underline font-semibold{% endif %}">Stories</a>
+            <a href="/search/users/?q={{ q }}" class="{% if category == 'users' %}underline font-semibold{% endif %}">People</a>
+        </nav>
+        <div class="w-[70%] flex flex-col px-8 py-3 gap-2 overflow-y-auto">
+            {% if results %}
+                {% if category == 'posts' %}
+                    {% for post in results %}
+                        {% include 'components/post_card.html' with post=post %}
+                    {% endfor %}
+                {% else %}
+                    {% for user in results %}
+                        <div class="w-[70%] relative flex items-center gap-4 px-2 py-4 border-b border-zinc-300">
+                            <a href="{% url 'blog:profile' username=user.username %}" class="w-10 h-10 flex items-center justify-center rounded-full border border-black/70">
+                                {% if user.picture %}
+                                    <div style="background-image: url('data:image/jpeg;base64,{{ user.picture|base64encode }}')" class="w-full h-full rounded-full bg-center bg-cover"></div>
+                                {% else %}
+                                    <img src="{% static 'images/user_default_icon.png' %}" alt="User default picture" class="w-full h-full">
+                                {% endif %}
+                            </a>
+                            <a href="{% url 'blog:profile' username=user.username %}" class="font-semibold hover:underline">{{ user.username }}</a>
+                            {% if user.username != request.user.username %}
+                                <a href="{% url 'blog:follow_user' username=user.username category=category q=q %}" class="rounded-3xl text-sm px-5 py-1 absolute right-2 text-white hover:opacity-85 {% if user.is_followed %}bg-red-500{% else %}bg-green-500{% endif %}">
+                                    {% if user.is_followed %}
+                                        Unfollow
+                                    {% else %}
+                                        Follow
+                                    {% endif %}
+                                </a>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% else %}
+                <div class="text-sm flex flex-col gap-2 text-zinc-500">
+                    <p>Make sure all words are spelled correctly.</p>
+                    <p>Try different keywords.</p>
+                    <p>Try more general keywords.</p>
+                </div>
+            {% endif %}
+        </div>
+    </main>
+</body>
+</html>

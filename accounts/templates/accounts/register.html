@@ -1,0 +1,39 @@
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Minium - Register</title>
+    <link rel="icon" href="{% static 'images/favicon.ico' %}">
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+    <main class="w-screen h-screen flex flex-col justify-center gap-8">
+        <header class="w-full flex flex-col items-center justify-center gap-2 ">
+            <h1 class="font-serif font-semibold text-3xl">Join Minium</h1>
+            {% for message in messages %}
+                <span class="text-sm font-semibold text-red-500">{{ message }}</span>
+            {% endfor %}
+        </header>
+        <div class="w-full flex flex-col items-center justify-center">
+            <form method="post" action="{% url 'accounts:register' %}" class="w-[55%] flex flex-col justify-center gap-4">
+                {% csrf_token %}
+                {% include 'components/input_field.html' with name='email' type='email' placeholder='Email' %}
+                {% include 'components/input_field.html' with name='username' placeholder='Username' %}
+                {% include 'components/input_field.html' with name='password' type='password' placeholder='Password' %}
+                <span class="text-xs font-serif font-semibold mx-auto">Your birthday</span>
+                <div class="w-1/2 mx-auto flex items-center justify-center gap-2 -mt-2">
+                    {% include 'components/input_date_field.html' with name='month' label='Month' placeholder='MM' max_length="2" %}
+                    {% include 'components/input_date_field.html' with name='day' label='Day' placeholder='DD' max_length="2" %}
+                    {% include 'components/input_date_field.html' with name='year' label='Year' placeholder='YYYY' max_length="4" %}
+                </div>
+                <button type="submit" class="w-1/3 py-1 rounded-3xl cursor-pointer mt-2 mx-auto bg-black text-white hover:opacity-85 disabled:opacity-60 disabled:cursor-default">Sign up</button>
+            </form>
+        </div>
+        <footer class="w-full flex justify-center">
+            <span>Already have an account? <a href="{% url 'accounts:login' %}" class="font-semibold text-green-500 hover:underline">Sign in</a></span>
+        </footer>
+    </main>
+
+    <script src="{% static 'js/disable_submit_btn.js' %}"></script>
+</body>
+</html>
